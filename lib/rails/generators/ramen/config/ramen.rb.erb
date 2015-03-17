@@ -1,13 +1,22 @@
 RamenRails.config do |config|
-  # Your Ramen Organization ID 
-  config.org_id = "<%= @org_id %>"
+  # Your Ramen Organization ID
+  config.organization_id = "<%= @organization_id %>"
 
-  <% if @org_secret %>
   # Your Ramen Organization Secret
-  config.org_secret = "<%= @org_secret %>"
+  <% if @organization_secret %>
+  config.organization_secret = "<%= @organization_secret %>"
+  <% else %>
+  # config.organization_secret = "SEKRIT"
   <% end %>
 
-  # The method/variable that contains the logged in user in your controllers.
-  # If it is `current_user` or `@user`, then you can ignore this
+  # How we can access the currently logged in user. This object
+  # must respond to #email, #id, and #name
+  # config.current_user = Proc.new { current_user }
+
+
+  # How we can access the current company in user. This object
+  # must respond to #id, #name, and #url
+  #
+  # If config.current_user is empty, this will be ignored
   # config.current_user = Proc.new { current_user }
 end

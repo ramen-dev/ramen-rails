@@ -6,12 +6,12 @@ module Ramen
         File.dirname(__FILE__)
       end
 
-      argument :org_id, :desc => "Your Rails organization ID"
-      argument :org_secret, :desc => "Your Rails organization Secret"
+      argument :organization_id, :desc => "Your Ramen organization ID"
+      argument :organization_secret, :desc => "Your Ramen organization Secret"
 
       def create_config_file
-        @org_id = org_id
-        @org_secret = org_secret
+        @organization_id = organization_id
+        @organization_secret = organization_secret
         template("ramen.rb.erb", "config/initializers/ramen.rb")
       end
 
