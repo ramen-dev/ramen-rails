@@ -53,7 +53,6 @@ module RamenRails
         @current_user_value
       end
 
-
       def current_user_labels=(value)
         raise ArgumentError, "current_user_labels should be a Proc" unless value.kind_of?(Proc)
         ensure_not_lambda!(value)

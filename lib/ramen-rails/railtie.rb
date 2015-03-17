@@ -10,7 +10,7 @@ module RamenRails
 
     initializer "ramen_rails.auto_include_filter.rb" do |app|
       ActionController::Base.send :after_filter, 
-        AutoIncludeFilter 
+        RamenAfterFilter
     end
   end
 end

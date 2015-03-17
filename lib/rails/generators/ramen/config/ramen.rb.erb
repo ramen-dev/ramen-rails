@@ -3,20 +3,55 @@ RamenRails.config do |config|
   config.organization_id = "<%= @organization_id %>"
 
   # Your Ramen Organization Secret
-  <% if @organization_secret %>
+  <%- if @organization_secret -%>
   config.organization_secret = "<%= @organization_secret %>"
-  <% else %>
+  <%- else -%>
   # config.organization_secret = "SEKRIT"
-  <% end %>
-
-  # How we can access the currently logged in user. This object
-  # must respond to #email, #id, and #name
-  # config.current_user = Proc.new { current_user }
+  <%- end -%>
 
 
-  # How we can access the current company in user. This object
-  # must respond to #id, #name, and #url
+  ## Important note regarding `-> {}` vs. `Proc.new {}`
+  ##
+  ## Use `Proc.new {}` and not `-> {}`. There's some weirdness
+  ## in how instance_eval works that will bite you in the butt
+  ## otherwise.
+
+
+  ## How we access the currently logged in user. This object
+  ## must respond to #email(string), #id(string), and #name(string)
   #
-  # If config.current_user is empty, this will be ignored
   # config.current_user = Proc.new { current_user }
+
+
+  ## How we access the labels for the currently logged in user.
+  ## This is an array of strings.
+  #
+  # config.current_user_labels = Proc.new { current_user.labels.map(&:name) }
+
+
+  ## How we access the current user "value". This is
+  ## a Float. It can represent whatever you want.
+  ##
+  ## If config.current_user is empty, this will be ignored
+  #
+  # config.current_user_value = Proc.new { current_user_value }
+
+
+  ## How we access the current company in user. This object
+  ## must respond to #id(string), #name(string), #url(string).
+  ## It MAY respond to #value (a float)
+  ##
+  ## If config.current_user is empty, this will be ignored
+  #
+  # config.current_company = Proc.new { current_company }
+
+
+  ## How we access the current company "value". This is
+  ## a Float. It can represent whatever you want.
+  ##
+  ## If config.current_user is empty, this will be ignored
+  #
+  # config.current_company_value = Proc.new { current_company_value }
+
+
 end
