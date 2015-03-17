@@ -1,0 +1,13 @@
+RamenRails.config do |config|
+  # Your Ramen Organization ID 
+  config.org_id = "<%= @org_id %>"
+
+  <% if @org_secret %>
+  # Your Ramen Organization Secret
+  config.org_secret = "<%= @org_secret %>"
+  <% end %>
+
+  # The method/variable that contains the logged in user in your controllers.
+  # If it is `current_user` or `@user`, then you can ignore this
+  # config.current_user = Proc.new { current_user }
+end
