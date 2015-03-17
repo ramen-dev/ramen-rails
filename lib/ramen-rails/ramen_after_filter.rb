@@ -55,6 +55,11 @@ module RamenRails
     def ramen_user_labels
       return nil unless ramen_user_object
       instance_eval(&RamenRails.config.current_user_labels) if RamenRails.config.current_user_labels.present?
+    rescue NameError => e
+      Rails.logger.debug "Swallowing NameError. We're probably in an Engine or some other context like Devise."
+      Rails.logger.debug e
+    
+      nil
     end
 
     def ramen_user_object
@@ -74,6 +79,11 @@ module RamenRails
     def ramen_user_value
       return nil unless ramen_user_object
       instance_eval(&RamenRails.config.current_user_value) if RamenRails.config.current_user_value.present?
+    rescue NameError => e
+      Rails.logger.debug "Swallowing NameError. We're probably in an Engine or some other context like Devise."
+      Rails.logger.debug e
+    
+      nil
     end
 
     def ramen_org_id
@@ -94,7 +104,24 @@ module RamenRails
 
     def ramen_company
       return nil unless ramen_user_object
-      instance_eval(&RamenRails.config.current_company) if RamenRails.config.current_company.present?
+      
+      begin
+        company = instance_eval(&RamenRails.config.current_company) if RamenRails.config.current_company.present?
+      rescue NameError => e
+        Rails.logger.debug "Swallowing NameError. We're probably in an Engine or some other context like Devise."
+        Rails.logger.debug e
+
+        company = nil
+      end
+      
+      return nil unless company
+
+      obj = {}
+      [:url, :id, :value, :name].each do |attr|
+        obj[attr] = user.send(attr) if user.respond_to?(attr) && user.send(attr).present?
+      end
+    
+      obj
     end
 
 
@@ -113,7 +140,7 @@ module RamenRails
       
       obj[:user][:value] = ramen_user_value if ramen_user_value.present?
       obj[:user][:labels] = ramen_user_labels unless ramen_user_labels.nil?
-
+      
       obj[:company] = ramen_company if ramen_company.present?
 
       super(obj, organization_secret: ramen_org_secret)
