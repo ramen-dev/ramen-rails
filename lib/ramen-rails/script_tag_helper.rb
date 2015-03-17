@@ -21,7 +21,7 @@ module RamenRails
 
       ramen_script = <<-RAMEN_SCRIPT
 <script id="RamenSettingsScriptTag">
-  var ramenSettings = #{ActiveSupport::JSON.encode(ramen_settings)};
+  window.ramenSettings = #{ActiveSupport::JSON.encode(ramen_settings)};
 </script>
 <script src="https://cdn.ramen.is/assets/ramen.js" async></script>
       RAMEN_SCRIPT
