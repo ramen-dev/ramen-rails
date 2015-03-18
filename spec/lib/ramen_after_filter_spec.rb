@@ -56,6 +56,7 @@ describe 'After filter' do
         before :each do
           RamenRails.config do |c|
             c.current_company = Proc.new { Hashie::Mash.new(name: 'Scrubber', url: 'https://scrubber.social') }
+            c.current_user_labels = Proc.new { ["ryan", "gold"] }
           end
         end
 
@@ -65,6 +66,7 @@ describe 'After filter' do
           expect(@dummy.response.body).to include("Angilly")
           expect(@dummy.response.body).to include("company")
           expect(@dummy.response.body).to include("Scrubber")
+          expect(@dummy.response.body).to include("gold")
         end
       end
 

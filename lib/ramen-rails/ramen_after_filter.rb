@@ -61,7 +61,7 @@ module RamenRails
 
     def ramen_user_labels
       return nil unless ramen_user_object
-      instance_eval(&RamenRails.config.current_user_labels) if RamenRails.config.current_user_labels.present?
+      controller.instance_eval(&RamenRails.config.current_user_labels) if RamenRails.config.current_user_labels.present?
     rescue NameError => e
       Rails.logger.debug "Swallowing NameError. We're probably in an Engine or some other context like Devise."
       Rails.logger.debug e
@@ -85,7 +85,7 @@ module RamenRails
 
     def ramen_user_value
       return nil unless ramen_user_object
-      instance_eval(&RamenRails.config.current_user_value) if RamenRails.config.current_user_value.present?
+      controller.instance_eval(&RamenRails.config.current_user_value) if RamenRails.config.current_user_value.present?
     rescue NameError => e
       Rails.logger.debug "Swallowing NameError. We're probably in an Engine or some other context like Devise."
       Rails.logger.debug e
