@@ -1,8 +1,8 @@
 PATH
   remote: .
   specs:
-    ramen-rails (0.0.3)
-      activesupport
+    ramen-rails (0.0.4)
+      activesupport (~> 4.2.0)
 
 GEM
   remote: https://rubygems.org/
@@ -72,9 +72,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  actionpack
-  hashie
-  rake
+  actionpack (~> 4.2.0)
+  hashie (~> 3.4.0)
+  rake (~> 10.4.2)
   ramen-rails!
-  rspec
-  timecop
+  rspec (~> 3.2.0)
+  timecop (~> 0.7.3)
