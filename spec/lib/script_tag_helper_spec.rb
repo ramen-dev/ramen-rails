@@ -22,7 +22,7 @@ describe 'Script Tag Helper' do
   it "should raise if the script tag helper is passed a blank object" do
     expect do
       @template.ramen_script_tag({})
-    end.to raise_error(RamenRails::ScriptTagHelper::EmptySettings)
+    end.to raise_error(RamenRails::ScriptTag::EmptySettings)
   end
 
   it "should render the tag" do
@@ -64,6 +64,32 @@ describe 'Script Tag Helper' do
     expect(output).to include("Ryan Angilly")
     expect(output).to include("auth_hash")
     expect(output).to include(auth_hash)
+  end
+
+  it "should work timestamp into hash if provided" do
+    ts = Time.now.to_i
+    ramen_settings = {
+      timestamp: ts,
+      organization_id: rand(1_000_000),
+      user: {
+        email: 'ryan@ramen.is',
+        name: 'Ryan Angilly',
+        id: '346656'
+      }
+    }
+
+    options = {organization_secret: "1234"}
+
+    not_auth_hash = (Digest::SHA2.new << "ryan@ramen.is:346656:Ryan Angilly:1234").to_s
+    auth_hash = (Digest::SHA2.new << "ryan@ramen.is:346656:Ryan Angilly:#{ts}:1234").to_s
+
+    output = @template.ramen_script_tag(ramen_settings, options)
+
+    expect(output).to include("Ryan Angilly")
+    expect(output).to include("auth_hash")
+    expect(output).not_to include(not_auth_hash)
+    expect(output).to include(auth_hash)
+ 
   end
 
   it "should not override auth_hash if it is provided" do

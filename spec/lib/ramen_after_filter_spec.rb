@@ -37,10 +37,19 @@ describe 'After filter' do
       end
 
       it "should attach tag" do
-        filter = RamenRails::RamenAfterFilter.filter(@dummy)
-        expect(@dummy.response.body).to include("script")
-        expect(@dummy.response.body).to include("Angilly")
-        expect(@dummy.response.body).to_not include("company")
+        Timecop.freeze do
+          ts = Time.now.to_i
+          auth_hash = (Digest::SHA2.new << "ryan@ramen.is:person-1234:Ryan Angilly:5678").to_s
+          ts_auth_hash = (Digest::SHA2.new << "ryan@ramen.is:person-1234:Ryan Angilly:#{ts}:5678").to_s
+          
+          filter = RamenRails::RamenAfterFilter.filter(@dummy)
+          
+          expect(@dummy.response.body).to_not include(auth_hash)
+          expect(@dummy.response.body).to include(ts_auth_hash)
+          expect(@dummy.response.body).to include("script")
+          expect(@dummy.response.body).to include("Angilly")
+          expect(@dummy.response.body).to_not include("company")
+        end
       end
 
       describe "and a company" do

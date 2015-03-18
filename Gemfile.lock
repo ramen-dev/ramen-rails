@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ramen-rails (0.0.1)
+    ramen-rails (0.0.3)
       activesupport
 
 GEM
@@ -64,6 +64,7 @@ GEM
       rspec-support (~> 3.2.0)
     rspec-support (3.2.2)
     thread_safe (0.3.5)
+    timecop (0.7.3)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
 
@@ -76,3 +77,4 @@ DEPENDENCIES
   rake
   ramen-rails!
   rspec
+  timecop

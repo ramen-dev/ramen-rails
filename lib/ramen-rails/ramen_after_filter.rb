@@ -118,7 +118,8 @@ module RamenRails
 
       obj = {}
       [:url, :id, :value, :name].each do |attr|
-        obj[attr] = user.send(attr) if user.respond_to?(attr) && user.send(attr).present?
+        obj[attr] = company.send(attr) if company.respond_to?(attr) &&
+          company.send(attr).present?
       end
     
       obj
@@ -129,6 +130,7 @@ module RamenRails
       obj = {}
       obj[:organization_id] = ramen_org_id
       obj[:user] = {}
+      obj[:timestamp] = Time.now.to_i
 
       user = ramen_user_object
 

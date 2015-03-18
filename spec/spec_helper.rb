@@ -1,6 +1,7 @@
 require 'rspec'
 require 'ramen-rails'
 require 'hashie/mash'
+require 'timecop'
 
 RSpec.configure do |config|
 
