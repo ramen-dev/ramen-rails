@@ -1,6 +1,13 @@
 module RamenRails
 
+  module AutoInclude
+    def add_ramen_script_tag 
+      RamenAfterFilter.filter(self)
+    end
+  end
+
   class RamenAfterFilter
+   
     include ScriptTagHelper
     CLOSING_BODY_TAG = %r{</body>}
 
