@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/ramen-dev/ramen-rails.svg)](https://travis-ci.org/ramen-dev/ramen-rails)
 
 This is a Rails helper for [Ramen](https://ramen.is). Ramen is a product that helps
-B2B SaaS product managers build better products by given them tools to better understand
+B2B SaaS product managers build better products by giving them tools to better understand
 what their customers need, and how satisfied their customers are with the results.
 
 This gem will automatically inject the `ramen.js` script tag into pages.
