@@ -4,6 +4,10 @@ describe 'After filter' do
 
   before :each do
     @dummy = Hashie::Mash.new({
+      request: {
+        original_url: "http://hiryan.com",
+      },
+
       response: {
         content_type: 'text/html',
         body: "<html><body>hi</body>"
@@ -48,6 +52,7 @@ describe 'After filter' do
           expect(@dummy.response.body).to include(ts_auth_hash)
           expect(@dummy.response.body).to include("script")
           expect(@dummy.response.body).to include("Angilly")
+          expect(@dummy.response.body).to include("hiryan.com")
           expect(@dummy.response.body).to_not include("company")
         end
       end

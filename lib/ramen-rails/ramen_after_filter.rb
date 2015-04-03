@@ -49,6 +49,24 @@ module RamenRails
       !!(response.body[CLOSING_BODY_TAG])
     end
 
+    def return_url
+      return controller.instance_eval(&RamenRails.config.return_url) if RamenRails.config.return_url
+      ourl = Proc.new { request.original_url }
+      return controller.instance_eval(&ourl)
+    end
+
+    def return_label
+      return false unless RamenRails.config.return_label
+      
+      controller.instance_eval(&RamenRails.config.return_label)
+    end
+
+    def manual_opt_in
+      return false unless RamenRails.config.manual_opt_in
+      
+      !!controller.instance_eval(&RamenRails.config.manual_opt_in)
+    end
+
     def ramen_script_tag_called_manually?
       controller.instance_variable_get(SCRIPT_TAG_HELPER_CALLED_INSTANCE_VARIABLE)
     end
@@ -113,7 +131,7 @@ module RamenRails
       return nil unless ramen_user_object
       
       begin
-        company = instance_eval(&RamenRails.config.current_company) if RamenRails.config.current_company.present?
+        company = controller.instance_eval(&RamenRails.config.current_company) if RamenRails.config.current_company.present?
       rescue NameError => e
         Rails.logger.debug "Swallowing NameError. We're probably in an Engine or some other context like Devise."
         Rails.logger.debug e
@@ -138,6 +156,9 @@ module RamenRails
       obj[:organization_id] = ramen_org_id
       obj[:user] = {}
       obj[:timestamp] = Time.now.to_i
+      obj[:manual_opt_in] = manual_opt_in
+      obj[:return_url] = return_url 
+      obj[:return_label] = return_label
 
       user = ramen_user_object
 

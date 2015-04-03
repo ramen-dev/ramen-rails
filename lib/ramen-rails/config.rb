@@ -4,6 +4,8 @@ module RamenRails
 
     class << self
 
+      attr_accessor :manual_opt_in, :return_url, :return_label
+    
       def ensure_not_lambda!(v)
         if v.lambda?
           raise NoLambdasPlease.new <<-ERR
