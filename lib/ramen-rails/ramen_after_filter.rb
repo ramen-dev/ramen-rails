@@ -127,29 +127,9 @@ module RamenRails
       nil
     end
 
-    def ramen_company
-      return nil unless ramen_user_object
-      
-      begin
-        company = controller.instance_eval(&RamenRails.config.current_company) if RamenRails.config.current_company.present?
-      rescue NameError => e
-        Rails.logger.debug "Swallowing NameError. We're probably in an Engine or some other context like Devise."
-        Rails.logger.debug e
-
-        company = nil
-      end
-      
-      return nil unless company
-
-      obj = {}
-      [:url, :id, :value, :name].each do |attr|
-        obj[attr] = company.send(attr) if company.respond_to?(attr) &&
-          company.send(attr).present?
-      end
-    
-      obj
+    def ramen_custom_links
+      RamenRails.config.custom_links
     end
-
 
     def ramen_script_tag
       obj = {}
@@ -170,8 +150,7 @@ module RamenRails
       
       obj[:user][:value] = ramen_user_value if ramen_user_value.present?
       obj[:user][:labels] = ramen_user_labels unless ramen_user_labels.nil?
-      
-      obj[:company] = ramen_company if ramen_company.present?
+      obj[:custom_links] = ramen_custom_links if ramen_custom_links.present?
 
       super(obj, organization_secret: ramen_org_secret)
     end

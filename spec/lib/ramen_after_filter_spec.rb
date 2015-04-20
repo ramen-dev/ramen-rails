@@ -5,13 +5,13 @@ describe 'After filter' do
   before :each do
     @dummy = Hashie::Mash.new({
       request: {
-        original_url: "http://hiryan.com",
-      },
+      original_url: "http://hiryan.com",
+    },
 
-      response: {
-        content_type: 'text/html',
-        body: "<html><body>hi</body>"
-      }
+    response: {
+      content_type: 'text/html',
+      body: "<html><body>hi</body>"
+    }
     })
   end
 
@@ -45,19 +45,57 @@ describe 'After filter' do
           ts = Time.now.to_i
           auth_hash = (Digest::SHA2.new << "ryan@ramen.is:person-1234:Ryan Angilly:5678").to_s
           ts_auth_hash = (Digest::SHA2.new << "ryan@ramen.is:person-1234:Ryan Angilly:#{ts}:5678").to_s
-          
+
           filter = RamenRails::RamenAfterFilter.filter(@dummy)
-          
+
           expect(@dummy.response.body).to_not include(auth_hash)
           expect(@dummy.response.body).to include(ts_auth_hash)
           expect(@dummy.response.body).to include("script")
           expect(@dummy.response.body).to include("Angilly")
           expect(@dummy.response.body).to include("hiryan.com")
           expect(@dummy.response.body).to_not include("company")
+          expect(@dummy.response.body).to_not include("custom_links")
         end
       end
 
-      describe "and a company" do
+      context "and custom links" do
+        before :each do
+          RamenRails.config do |c|
+            c.custom_links = [
+              {
+              title: "Submit a bug",
+              callback: "$('#submit_bug').modal('show')"
+            },
+
+              {
+              title: "Knowledge Base",
+              href: "/knowedge_base"
+            }
+            ]
+          end
+        end
+
+        it "should attach tag" do
+          Timecop.freeze do
+            ts = Time.now.to_i
+            auth_hash = (Digest::SHA2.new << "ryan@ramen.is:person-1234:Ryan Angilly:5678").to_s
+            ts_auth_hash = (Digest::SHA2.new << "ryan@ramen.is:person-1234:Ryan Angilly:#{ts}:5678").to_s
+
+            filter = RamenRails::RamenAfterFilter.filter(@dummy)
+
+            expect(@dummy.response.body).to_not include(auth_hash)
+            expect(@dummy.response.body).to include(ts_auth_hash)
+            expect(@dummy.response.body).to include("script")
+            expect(@dummy.response.body).to include("Angilly")
+            expect(@dummy.response.body).to include("hiryan.com")
+            expect(@dummy.response.body).to_not include("company")
+            expect(@dummy.response.body).to include("custom_links")
+          end
+
+        end
+      end
+
+      context "and a company" do
         before :each do
           RamenRails.config do |c|
             c.current_company = Proc.new { Hashie::Mash.new(name: 'Scrubber', url: 'https://scrubber.social') }
@@ -65,7 +103,7 @@ describe 'After filter' do
           end
         end
 
-        it "should attach user & company" do
+        pending "should attach user & company" do
           filter = RamenRails::RamenAfterFilter.filter(@dummy)
           expect(@dummy.response.body).to include("script")
           expect(@dummy.response.body).to include("Angilly")

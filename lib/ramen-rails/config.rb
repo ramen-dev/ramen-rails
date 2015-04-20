@@ -4,7 +4,12 @@ module RamenRails
 
     class << self
 
-      attr_accessor :manual_opt_in, :return_url, :return_label
+      attr_accessor :manual_opt_in,
+        :environment,
+        :return_url,
+        :return_label,
+        :ramen_js_asset_uri,
+        :custom_links
     
       def ensure_not_lambda!(v)
         if v.lambda?

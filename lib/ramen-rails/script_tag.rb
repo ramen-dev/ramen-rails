@@ -17,18 +17,24 @@ module RamenRails
       self.options = options
     end
 
+    def ramen_js_asset_uri
+      RamenRails.config.ramen_js_asset_uri || "https://cdn.ramen.is/assets/ramen.js"
+    end
+
     def generate
       if ramen_settings.blank?
         raise EmptySettings.new("need to pass ramen_script_tag a non-empty ramen_settings argument")
       end
 
+      ramen_settings[:timestamp] ||= Time.now.to_i
+      
       add_auth_hash!
 
       ramen_script = <<-RAMEN_SCRIPT
   <script id="RamenSettingsScriptTag">
     window.ramenSettings = #{ActiveSupport::JSON.encode(ramen_settings)};
   </script>
-  <script src="https://cdn.ramen.is/assets/ramen.js" async></script>
+  <script src="#{ramen_js_asset_uri}" async></script>
       RAMEN_SCRIPT
 
       if controller
@@ -46,11 +52,7 @@ module RamenRails
 
       user = ramen_settings[:user]
 
-      if ramen_settings[:timestamp]
-        secret_string = "#{user[:email]}:#{user[:id]}:#{user[:name]}:#{ramen_settings[:timestamp]}:#{options[:organization_secret]}"
-      else
-        secret_string = "#{user[:email]}:#{user[:id]}:#{user[:name]}:#{options[:organization_secret]}"
-      end
+      secret_string = "#{user[:email]}:#{user[:id]}:#{user[:name]}:#{ramen_settings[:timestamp]}:#{options[:organization_secret]}"
 
       ramen_settings[:auth_hash] = (Digest::SHA2.new << secret_string).to_s
     end

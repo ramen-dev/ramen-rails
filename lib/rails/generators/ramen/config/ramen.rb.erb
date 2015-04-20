@@ -37,12 +37,20 @@ RamenRails.config do |config|
   # config.current_user_value = Proc.new { current_user_value }
 
 
-  ## How we access the current company in user. This object
-  ## must respond to #id(string), #name(string), #url(string).
-  ## It MAY respond to #value (a float)
-  ##
-  ## If config.current_user is empty, this will be ignored
+  ## Custom Links to add to the Ramen Tray
+  ## You can add up to 3. Each requires a `title`.
+  ## Each requires a `callback` or an `href`.
+  ## Links w/ `href` will have target="_blank".
+  ## Callbacks are *strings* not JS functions.
   #
-  # config.current_company = Proc.new { current_company }
-
+  # config.custom_links = [
+  #   {
+  #     title: "Submit a bug",
+  #     callback: "$('#submit_bug').modal('show')"  #<-- String!
+  #   },
+  #   {
+  #     title: "Knowledge Base",
+  #     href: "/knowedge_base"
+  #   }
+  # ]
 end
