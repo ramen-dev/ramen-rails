@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Ryan Angilly"]
   s.email       = ["ryan@ramen.is"]
   s.homepage    = "https://ramen.is"
-  s.summary     = %q{Rails gem for Ramen}
-  s.description = %q{Ramen helps B2B SaaS product teams build better products through workflow-enhance customer development}
+  s.summary     = %q{Rails gem for Ramen (https://ramen.is)}
+  s.description = %q{Ramen helps B2B SaaS product teams build better products through workflow-enhanced customer development}
 
 
   s.add_development_dependency "actionpack", "~>4.0"
