@@ -12,13 +12,14 @@ RamenRails.config do |config|
 
   ## Important note regarding `-> {}` vs. `Proc.new {}`
   ##
-  ## Use `Proc.new {}` and not `-> {}`. There's some weirdness
-  ## in how instance_eval works that will bite you in the butt
-  ## otherwise.
+  ## Use `Proc.new {}` and not `-> {}`. There's some inconsistency
+  ## in how instance_eval works across Ruby versions that will bite
+  ## you in the butt otherwise.
 
 
   ## How we access the currently logged in user. This object
-  ## must respond to #email(string), #id(string), and #name(string)
+  ## should respond to #email(String), #id(String),
+  ## #created_at(Time) and #name(String)
   #
   # config.current_user = Proc.new { current_user }
 
@@ -41,7 +42,8 @@ RamenRails.config do |config|
   ## You can add up to 3. Each requires a `title`.
   ## Each requires a `callback` or an `href`.
   ## Links w/ `href` will have target="_blank".
-  ## Callbacks are *strings* not JS functions.
+  ## `callback` is a *string*, not a JS closure even
+  ## if you override these values in your markup.
   #
   # config.custom_links = [
   #   {

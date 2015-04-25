@@ -139,12 +139,12 @@ module RamenRails
       obj[:manual_opt_in] = manual_opt_in
       obj[:return_url] = return_url 
       obj[:return_label] = return_label
-
+  
       user = ramen_user_object
 
       obj[:user][:id] = user.id if user.respond_to?(:id) && user.id.present?
 
-      [:email, :name].each do |attr|
+      [:created_at, :email, :name].each do |attr|
         obj[:user][attr] = user.send(attr) if user.respond_to?(attr) && user.send(attr).present?
       end
       

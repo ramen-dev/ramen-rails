@@ -40,6 +40,34 @@ describe 'After filter' do
         @dummy.current_user = {email: 'ryan@ramen.is', name: 'Ryan Angilly', id: 'person-1234'}
       end
 
+      context "with a value proc set" do
+        before :each do |c|
+          @dummy.current_user.value = 1000
+          RamenRails.config do |c|
+            c.current_user_value = Proc.new { current_user.value }
+          end
+        end
+
+        it "should include value in output" do
+          filter = RamenRails::RamenAfterFilter.filter(@dummy)
+          puts @dummy.response.body
+
+          expect(@dummy.response.body).to include("value")
+        end 
+
+      end
+
+      context "that responds to created_at" do
+        before :each do
+          @dummy.current_user.created_at = Time.now 
+        end
+
+        it "should include created_at in output" do
+          filter = RamenRails::RamenAfterFilter.filter(@dummy)
+          expect(@dummy.response.body).to include("created_at")
+        end 
+      end
+
       it "should attach tag" do
         Timecop.freeze do
           ts = Time.now.to_i
@@ -50,8 +78,10 @@ describe 'After filter' do
 
           expect(@dummy.response.body).to_not include(auth_hash)
           expect(@dummy.response.body).to include(ts_auth_hash)
+          expect(@dummy.response.body).to_not include("value")
           expect(@dummy.response.body).to include("script")
           expect(@dummy.response.body).to include("Angilly")
+          expect(@dummy.response.body).to_not include("created_at")
           expect(@dummy.response.body).to include("hiryan.com")
           expect(@dummy.response.body).to_not include("company")
           expect(@dummy.response.body).to_not include("custom_links")
@@ -88,6 +118,7 @@ describe 'After filter' do
             expect(@dummy.response.body).to include("script")
             expect(@dummy.response.body).to include("Angilly")
             expect(@dummy.response.body).to include("hiryan.com")
+            expect(@dummy.response.body).to_not include("created_at")
             expect(@dummy.response.body).to_not include("company")
             expect(@dummy.response.body).to include("custom_links")
           end
