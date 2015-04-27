@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ramen-rails (0.0.8)
+    ramen-rails (0.0.9)
       activesupport (~> 4.0)
 
 GEM

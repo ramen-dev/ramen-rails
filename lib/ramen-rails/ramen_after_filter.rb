@@ -144,8 +144,12 @@ module RamenRails
 
       obj[:user][:id] = user.id if user.respond_to?(:id) && user.id.present?
 
-      [:created_at, :email, :name].each do |attr|
+      [:email, :name].each do |attr|
         obj[:user][attr] = user.send(attr) if user.respond_to?(attr) && user.send(attr).present?
+      end
+     
+      if user.respond_to?(:created_at) && user.send(:created_at).present?
+        obj[:user][:created_at] = user.send(:created_at).to_i
       end
       
       obj[:user][:value] = ramen_user_value if ramen_user_value.present?

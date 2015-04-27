@@ -50,7 +50,6 @@ describe 'After filter' do
 
         it "should include value in output" do
           filter = RamenRails::RamenAfterFilter.filter(@dummy)
-          puts @dummy.response.body
 
           expect(@dummy.response.body).to include("value")
         end 
@@ -59,12 +58,14 @@ describe 'After filter' do
 
       context "that responds to created_at" do
         before :each do
-          @dummy.current_user.created_at = Time.now 
+          @time = Time.new(2014, 11, 10) 
+          @dummy.current_user.created_at = @time 
         end
 
         it "should include created_at in output" do
           filter = RamenRails::RamenAfterFilter.filter(@dummy)
           expect(@dummy.response.body).to include("created_at")
+          expect(@dummy.response.body).to include(@time.to_i.to_s)
         end 
       end
 
