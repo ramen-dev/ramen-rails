@@ -1,0 +1,4 @@
+#!/bin/sh
+
+export RAILS_VERSION=rails3; bundle update; bundle exec rspec
+export RAILS_VERSION=rails4; bundle update; bundle exec rspec
