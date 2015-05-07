@@ -40,6 +40,18 @@ describe 'After filter' do
         @dummy.current_user = {email: 'ryan@ramen.is', name: 'Ryan Angilly', id: 'person-1234'}
       end
 
+      context "that does not respond to name" do
+        before :each do
+          @dummy.current_user = {email: 'ryan@ramen.is', id: 'person-1234'}
+        end
+
+        it "should throw an error" do
+          expect do
+            RamenRails::RamenAfterFilter.filter(@dummy)
+          end.to raise_error(RamenRails::RamenAfterFilter::InvalidUserObject)
+        end
+      end
+
       context "with a value proc set" do
         before :each do |c|
           @dummy.current_user.value = 1000

@@ -8,6 +8,8 @@ module RamenRails
 
   class RamenAfterFilter
    
+    class InvalidUserObject < StandardError; end
+
     include ScriptTagHelper
     CLOSING_BODY_TAG = %r{</body>}
 
@@ -142,10 +144,12 @@ module RamenRails
   
       user = ramen_user_object
 
-      obj[:user][:id] = user.id if user.respond_to?(:id) && user.id.present?
+      raise InvalidUserObject.new("User #{user} does not respond to and have a present? #id") unless user.respond_to?(:id) && user.id.present?
+      raise InvalidUserObject.new("User #{user} does not respond to and have a present? #name") unless user.respond_to?(:name) && user.name.present?
+      raise InvalidUserObject.new("User #{user} does not respond to and have a present? #email") unless user.respond_to?(:email) && user.email.present?
 
-      [:email, :name].each do |attr|
-        obj[:user][attr] = user.send(attr) if user.respond_to?(attr) && user.send(attr).present?
+      [:email, :name, :id].each do |attr|
+        obj[:user][attr] = user.send(attr)
       end
      
       if user.respond_to?(:created_at) && user.send(:created_at).present?
