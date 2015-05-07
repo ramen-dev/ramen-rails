@@ -3,4 +3,8 @@ rvm:
   - "1.9.3"
   - "2.1.2"
 
+env:
+  - "RAILS_VERSION=rails4"
+  - "RAILS_VERSION=rails3"
+
 script: bundle exec rspec

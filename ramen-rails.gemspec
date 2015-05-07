@@ -13,13 +13,13 @@ Gem::Specification.new do |s|
   s.description = %q{Ramen helps B2B SaaS product teams build better products through workflow-enhanced customer development}
 
 
-  s.add_development_dependency "actionpack", "~>4.0"
+  s.add_development_dependency "actionpack", ">= 3.0"
   s.add_development_dependency "rake", "~>10.4"
   s.add_development_dependency "rspec", "~>3.2"
   s.add_development_dependency "hashie", "~>3.4"
   s.add_development_dependency "timecop", "~>0.7"
 
-  s.add_dependency "activesupport", "~>4.0"
+  s.add_dependency "activesupport", ">= 3.0"
 
   s.rubyforge_project = "ramen-rails"
 
