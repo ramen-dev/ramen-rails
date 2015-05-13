@@ -161,6 +161,13 @@ module RamenRails
       obj[:custom_links] = ramen_custom_links if ramen_custom_links.present?
 
       super(obj, organization_secret: ramen_org_secret)
+
+    rescue InvalidUserObject => e
+      ::Rails.logger.debug "InvalidUserObject exception. Not rendering Ramen script tag. Error details: #{e.inspect}"
+      "<!-- Exception in ramen script tag. See logs. -->"
+    rescue => e
+      ::Rails.logger.debug "Exception in ramen-rails script tag method. Not rendering Ramen script tag. Error details: #{e.inspect}"
+      "<!-- Exception in ramen script tag. See logs. -->"
     end
 
   end

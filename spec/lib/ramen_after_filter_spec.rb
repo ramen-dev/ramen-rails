@@ -13,6 +13,24 @@ describe 'After filter' do
       body: "<html><body>hi</body>"
     }
     })
+
+    module Rails
+      class LogProxy
+        def debug(msg)
+        end
+      end
+
+      def self.env
+        Hashie::Mash.new({
+          :development? => nil,
+          :production? => nil
+        })
+      end
+
+      def self.logger
+        LogProxy.new
+      end
+    end
   end
 
   describe "with no config" do
@@ -45,10 +63,9 @@ describe 'After filter' do
           @dummy.current_user = {email: 'ryan@ramen.is', id: 'person-1234'}
         end
 
-        it "should throw an error" do
-          expect do
-            RamenRails::RamenAfterFilter.filter(@dummy)
-          end.to raise_error(RamenRails::RamenAfterFilter::InvalidUserObject)
+        it "should render a comment erro" do
+          RamenRails::RamenAfterFilter.filter(@dummy)
+          expect(@dummy.response.body).to include("See logs")
         end
       end
 
