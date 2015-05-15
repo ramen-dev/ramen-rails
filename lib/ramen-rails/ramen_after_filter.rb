@@ -51,6 +51,10 @@ module RamenRails
       !!(response.body[CLOSING_BODY_TAG])
     end
 
+    def logged_in_url
+      return controller.instance_eval(&RamenRails.config.logged_in_url) if RamenRails.config.logged_in_url
+    end
+
     def return_url
       return controller.instance_eval(&RamenRails.config.return_url) if RamenRails.config.return_url
       ourl = Proc.new { request.original_url }
@@ -139,6 +143,7 @@ module RamenRails
       obj[:user] = {}
       obj[:timestamp] = Time.now.to_i
       obj[:manual_opt_in] = manual_opt_in
+      obj[:logged_in_url] = logged_in_url if logged_in_url.present?
       obj[:return_url] = return_url 
       obj[:return_label] = return_label
   

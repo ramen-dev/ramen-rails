@@ -6,6 +6,7 @@ module RamenRails
 
       attr_accessor :manual_opt_in,
         :environment,
+        :logged_in_url,
         :return_url,
         :return_label,
         :ramen_js_asset_uri,
