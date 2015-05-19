@@ -77,6 +77,20 @@ describe 'After filter' do
           end
         end
 
+        context "and ramen_script_tag_options" do
+          before :each do |c|
+            @dummy.ramen_script_tag_options = {survey_id: 'survey_ryan'}
+          end
+
+          it "should include value in output" do
+            filter = RamenRails::RamenAfterFilter.filter(@dummy)
+
+            expect(@dummy.response.body).to include("survey_ryan")
+            expect(@dummy.response.body).to include("survey_id")
+          end 
+        end
+
+
         it "should include value in output" do
           filter = RamenRails::RamenAfterFilter.filter(@dummy)
 

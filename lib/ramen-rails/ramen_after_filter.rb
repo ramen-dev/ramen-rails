@@ -4,6 +4,10 @@ module RamenRails
     def add_ramen_script_tag 
       RamenAfterFilter.filter(self)
     end
+
+    def ramen_script_tag_options
+      @ramen_script_tag_options || {}
+    end
   end
 
   class RamenAfterFilter
@@ -24,6 +28,10 @@ module RamenRails
 
     def initialize(kontroller)
       @controller = kontroller 
+    end
+
+    def ramen_script_tag_options
+      controller.ramen_script_tag_options
     end
 
     def include_javascript! 
@@ -164,6 +172,9 @@ module RamenRails
       obj[:user][:value] = ramen_user_value if ramen_user_value.present?
       obj[:user][:labels] = ramen_user_labels unless ramen_user_labels.nil?
       obj[:custom_links] = ramen_custom_links if ramen_custom_links.present?
+
+
+      obj = obj.deep_merge(ramen_script_tag_options) if ramen_script_tag_options.present?
 
       super(obj, organization_secret: ramen_org_secret)
 
