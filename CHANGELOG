@@ -1,0 +1,4 @@
+CHANGELOG
+
+Version 0.2.0: Add ability to pass in logged_in_url from ramenSettings 
+Version 0.3.0: Add RamenRails::Import for importing customers directly into Ramen from command line
