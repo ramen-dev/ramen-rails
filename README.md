@@ -11,7 +11,7 @@ This gem will automatically inject the `ramen.js` script tag into pages.
 Add this to your Gemfile:
 
 ```
-gem "ramen-rails"
+gem "ramen-rails", "~> 0.3.0"
 ```
 
 Then run:
