@@ -64,10 +64,12 @@ module RamenRails
 
       endpoint = ENV['RAMEN_IMPORT_URI'] || "https://ramen.is/po.json"
       uri = URI("#{endpoint}?json_payload=#{CGI.escape(json)}")
+      start = Time.now.to_f
       resp = Net::HTTP.get_response(uri)
+      total = Time.now.to_f - start
 
       if resp.code == "200"
-        puts "Imported #{obj[:name]} <#{obj[:email]}>"
+        puts "Imported #{obj[:name]} <#{obj[:email]}> in #{total} seconds"
       else
         puts "ERROR (#{resp.code}) Importing #{obj[:name]} <#{obj[:email]}>. Continuing...."
         puts resp.body.to_s
