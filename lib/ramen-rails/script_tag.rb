@@ -32,7 +32,15 @@ module RamenRails
 
       ramen_script = <<-RAMEN_SCRIPT
   <script id="RamenSettingsScriptTag">
-    window.ramenSettings = #{ActiveSupport::JSON.encode(ramen_settings)};
+    (function() {
+      var opts = #{ActiveSupport::JSON.encode(ramen_settings)};
+      window.ramenSettings = window.ramenSettings || {};
+      for (var property in opts) {
+        if (opts.hasOwnProperty(property)) {
+          window.ramenSettings[property] = opts[property];
+        }
+      }
+    })()
   </script>
   <script src="#{ramen_js_asset_uri}" async></script>
       RAMEN_SCRIPT
