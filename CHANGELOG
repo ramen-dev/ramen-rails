@@ -13,3 +13,6 @@ Version 0.4.0
 Add support for window.ramenSettings.onload and window.ramenOnload. Change the way
 ramenSettings is set so that it can be merged with other options previously defined
 in <script> tags.
+
+Version 0.5.0
+Add support for Companies

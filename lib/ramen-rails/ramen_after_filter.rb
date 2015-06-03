@@ -85,6 +85,38 @@ module RamenRails
       controller.instance_variable_get(SCRIPT_TAG_HELPER_CALLED_INSTANCE_VARIABLE)
     end
 
+    POTENTIAL_RAMEN_COMPANY_OBJECTS = [
+      Proc.new { instance_eval(&RamenRails.config.current_company) if RamenRails.config.current_company.present? },
+      Proc.new { current_company },
+      Proc.new { @company }
+    ]
+
+    def ramen_company_labels
+      return nil unless ramen_company_object
+      controller.instance_eval(&RamenRails.config.current_company_labels) if RamenRails.config.current_company_labels.present?
+    rescue NameError => e
+      Rails.logger.debug "Swallowing NameError. We're probably in an Engine or some other context like Devise."
+      Rails.logger.debug e
+    
+      nil
+    end
+
+    def ramen_company_object
+      POTENTIAL_RAMEN_COMPANY_OBJECTS.each do |potential_company|
+        begin
+          company = controller.instance_eval &potential_company
+          if (company.present? && company.name.present? && company.id.present?)
+            return company
+          end
+
+        rescue NameError
+          next
+        end
+      end
+
+      nil
+    end
+
     POTENTIAL_RAMEN_USER_OBJECTS = [
       Proc.new { instance_eval(&RamenRails.config.current_user) if RamenRails.config.current_user.present? },
       Proc.new { current_user },
@@ -173,6 +205,16 @@ module RamenRails
       obj[:user][:labels] = ramen_user_labels unless ramen_user_labels.nil?
       obj[:custom_links] = ramen_custom_links if ramen_custom_links.present?
 
+      company = ramen_company_object
+      if company
+        obj[:company] = {}
+
+        [:url, :name, :id].each do |attr|
+          obj[:company][attr] = company.send(attr)
+        end
+      
+        obj[:company][:labels] = ramen_company_labels unless ramen_company_labels.nil?
+      end
 
       obj = obj.deep_merge(ramen_script_tag_options) if ramen_script_tag_options.present?
 

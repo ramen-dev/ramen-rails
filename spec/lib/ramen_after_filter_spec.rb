@@ -171,23 +171,44 @@ describe 'After filter' do
       end
 
       context "and a company" do
-        before :each do
-          RamenRails.config do |c|
-            c.current_company = Proc.new { Hashie::Mash.new(name: 'Scrubber', url: 'https://scrubber.social') }
-            c.current_user_labels = Proc.new { ["ryan", "gold"] }
+        
+        context "that has no id" do
+          before :each do
+            RamenRails.config do |c|
+              c.current_company = Proc.new { Hashie::Mash.new(name: 'Scrubber', url: 'https://scrubber.social') }
+              c.current_company_labels = Proc.new { ["ryan", "gold"] }
+            end
+          end
+
+          it "should not attach user & company" do
+            filter = RamenRails::RamenAfterFilter.filter(@dummy)
+            expect(@dummy.response.body).to include("script")
+            expect(@dummy.response.body).to include("Angilly")
+            expect(@dummy.response.body).not_to include("company")
+            expect(@dummy.response.body).not_to include("Scrubber")
+            expect(@dummy.response.body).not_to include("gold")
           end
         end
+        
+        context "that has an id" do
+          before :each do
+            RamenRails.config do |c|
+              c.current_company = Proc.new { Hashie::Mash.new(id: "1245", name: 'Scrubber', url: 'https://scrubber.social') }
+              c.current_company_labels = Proc.new { ["ryan", "gold"] }
+            end
+          end
 
-        pending "should attach user & company" do
-          filter = RamenRails::RamenAfterFilter.filter(@dummy)
-          expect(@dummy.response.body).to include("script")
-          expect(@dummy.response.body).to include("Angilly")
-          expect(@dummy.response.body).to include("company")
-          expect(@dummy.response.body).to include("Scrubber")
-          expect(@dummy.response.body).to include("gold")
+          it "should attach user & company" do
+            filter = RamenRails::RamenAfterFilter.filter(@dummy)
+            expect(@dummy.response.body).to include("script")
+            expect(@dummy.response.body).to include("Angilly")
+            expect(@dummy.response.body).to include("company")
+            expect(@dummy.response.body).to include("Scrubber")
+            expect(@dummy.response.body).to include("1245")
+            expect(@dummy.response.body).to include("gold")
+          end
         end
       end
-
     end
   end
 end

@@ -30,6 +30,18 @@ module RamenRails
         end
       end
 
+      def current_company_labels=(value)
+        raise ArgumentError, "current_company_labels should be a Proc" unless value.kind_of?(Proc)
+        ensure_not_lambda!(value)
+
+        @current_company_labels = value
+      end
+
+      def current_company_labels
+        @current_company_labels
+      end
+
+
       def current_company=(value)
         raise ArgumentError, "current_company should be a Proc" unless value.kind_of?(Proc)
         ensure_not_lambda!(value)
