@@ -16,3 +16,6 @@ in <script> tags.
 
 Version 0.5.0
 Add support for Companies
+
+Version 0.5.1
+Make importer support Companies. Add tests for importer.

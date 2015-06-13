@@ -10,9 +10,7 @@ module RamenRails
         :return_url,
         :return_label,
         :ramen_js_asset_uri,
-        :custom_links,
-        :import_user_labels,
-        :import_user_value
+        :custom_links
     
       def ensure_not_lambda!(v)
         if v.lambda?
@@ -85,6 +83,31 @@ module RamenRails
       def current_user_labels
         @current_user_labels
       end
+     
+      attr_reader :import_company_labels
+      def import_company_labels=(value)
+        raise ArgumentError, "import_company_labels should be a Proc" unless value.kind_of?(Proc)
+        ensure_not_lambda!(value)
+        
+        @import_company_labels = value
+      end
+      
+      attr_reader :import_user_labels
+      def import_user_labels=(value)
+        raise ArgumentError, "import_user_labels should be a Proc" unless value.kind_of?(Proc)
+        ensure_not_lambda!(value)
+        
+        @import_user_labels = value
+      end
+
+      attr_reader :import_user_value
+      def import_user_value=(value)
+        raise ArgumentError, "import_user_value should be a Proc" unless value.kind_of?(Proc)
+        ensure_not_lambda!(value)
+        
+        @import_user_value = value
+      end
+
 
       def organization_id=(value)
         @organization_id = value
