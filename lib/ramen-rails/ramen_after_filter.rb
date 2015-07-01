@@ -200,6 +200,10 @@ module RamenRails
       if user.respond_to?(:created_at) && user.send(:created_at).present?
         obj[:user][:created_at] = user.send(:created_at).to_i
       end
+ 
+      if user.respond_to?(:traits) && user.send(:traits).present?
+        obj[:user][:traits] = user.send(:traits)
+      end
       
       obj[:user][:value] = ramen_user_value if ramen_user_value.present?
       obj[:user][:labels] = ramen_user_labels unless ramen_user_labels.nil?
@@ -212,7 +216,11 @@ module RamenRails
         [:url, :name, :id].each do |attr|
           obj[:company][attr] = company.send(attr)
         end
-      
+    
+        if company.respond_to?(:traits) && company.send(:traits).present?
+          obj[:company][:traits] = company.send(:traits)
+        end
+     
         obj[:company][:labels] = ramen_company_labels unless ramen_company_labels.nil?
       end
 

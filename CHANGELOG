@@ -19,3 +19,6 @@ Add support for Companies
 
 Version 0.5.1
 Make importer support Companies. Add tests for importer.
+
+Version 0.6.0
+Support sending custom `trait` data into Ramen for Users & Companies.

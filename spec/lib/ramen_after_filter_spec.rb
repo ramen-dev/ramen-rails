@@ -99,6 +99,18 @@ describe 'After filter' do
 
       end
 
+      context "that responds to traits" do
+        before :each do
+          @dummy.current_user.traits = {bucket: 6, is_friend: true, original_name: "Netflix"}
+        end
+
+        it "should attach traits to company" do
+          filter = RamenRails::RamenAfterFilter.filter(@dummy)
+          expect(@dummy.response.body).to include('"is_friend":true')
+        end
+      end
+
+
       context "that responds to created_at" do
         before :each do
           @time = Time.new(2014, 11, 10) 
@@ -170,8 +182,7 @@ describe 'After filter' do
         end
       end
 
-      context "and a company" do
-        
+      context "and a company" do        
         context "that has no id" do
           before :each do
             RamenRails.config do |c|
@@ -194,7 +205,22 @@ describe 'After filter' do
           before :each do
             RamenRails.config do |c|
               c.current_company = Proc.new { Hashie::Mash.new(id: "1245", name: 'Scrubber', url: 'https://scrubber.social') }
-              c.current_company_labels = Proc.new { ["ryan", "gold"] }
+              c.current_company_labels = Proc.new { ["ryan", "goldzz"] }
+            end
+          end
+
+          context "and traits" do
+            before :each do
+              RamenRails.config do |c|
+                c.current_company = Proc.new {
+                  Hashie::Mash.new(id: "1245", name: 'Scrubber', url: 'https://scrubber.social', traits: {plan: 'startup'})
+                }
+              end
+            end
+
+            it "should attach traits to company" do
+              filter = RamenRails::RamenAfterFilter.filter(@dummy)
+              expect(@dummy.response.body).to include('"plan":"startup"')
             end
           end
 
@@ -205,7 +231,7 @@ describe 'After filter' do
             expect(@dummy.response.body).to include("company")
             expect(@dummy.response.body).to include("Scrubber")
             expect(@dummy.response.body).to include("1245")
-            expect(@dummy.response.body).to include("gold")
+            expect(@dummy.response.body).to include("goldzz")
           end
         end
       end
