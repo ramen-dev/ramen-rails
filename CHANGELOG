@@ -22,3 +22,7 @@ Make importer support Companies. Add tests for importer.
 
 Version 0.6.0
 Support sending custom `trait` data into Ramen for Users & Companies.
+
+Version 0.6.1
+Check to see if `current_user` responds to `#persisted?` and, if so, and if it returns `false`,
+don't render `ramenSettings`

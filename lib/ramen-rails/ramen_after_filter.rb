@@ -134,17 +134,29 @@ module RamenRails
     end
 
     def ramen_user_object
+      user_to_return = nil
+
       POTENTIAL_RAMEN_USER_OBJECTS.each do |potential_user|
         begin
           user = controller.instance_eval &potential_user
-          return user if user.present? && 
-            (user.email.present? || user.id.present?)
+          if user.present? && (user.email.present? || user.id.present?)
+            user_to_return = user
+            break
+          end
+
         rescue NameError
           next
         end
       end
 
-      nil
+      if user_to_return &&
+        user_to_return.respond_to?(:persisted?) &&
+        (user_to_return.persisted? == false)
+       
+        nil
+      else
+        user_to_return
+      end
     end
 
     def ramen_user_value

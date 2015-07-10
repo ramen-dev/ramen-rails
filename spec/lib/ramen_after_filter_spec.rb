@@ -1,18 +1,49 @@
 require 'spec_helper'
 
+module Dummy
+  Controller = Struct.new(:request, :response, :current_user, :ramen_script_tag_options)
+  Request = Struct.new(:original_url)
+  Response = Struct.new(:content_type, :body)
+
+  class User
+    def self.with(attrs)
+      user_class = Struct.new(*attrs.keys) do 
+        def set(attrs)
+          @extras ||= Hashie::Mash.new
+          attrs.each {|k,v| @extras[k.to_s] = v }
+        end
+
+        def method_missing(name, *args, &block)
+          @extras ||= Hashie::Mash.new
+          if @extras.key?(name.to_s)
+            @extras[name.to_s]
+          else
+            super
+          end
+        end
+
+        def respond_to?(name)
+          @extras ||= Hashie::Mash.new
+          @extras.key?(name.to_s) or super
+        end
+
+      end
+
+      user = user_class.new
+
+      attrs.each {|k, v| user.send("#{k}=", v) }
+
+      user
+    end
+  end
+end
+
 describe 'After filter' do
 
   before :each do
-    @dummy = Hashie::Mash.new({
-      request: {
-      original_url: "http://hiryan.com",
-    },
-
-    response: {
-      content_type: 'text/html',
-      body: "<html><body>hi</body>"
-    }
-    })
+    req = Dummy::Request.new("http://hiryan.com")
+    resp = Dummy::Response.new("text/html", "<html><body>hi</body></html>")
+    @dummy = Dummy::Controller.new(req, resp)
 
     module Rails
       class LogProxy
@@ -55,15 +86,15 @@ describe 'After filter' do
 
     describe "and a user" do
       before :each do
-        @dummy.current_user = {email: 'ryan@ramen.is', name: 'Ryan Angilly', id: 'person-1234'}
+        @dummy.current_user = Dummy::User.with(email: 'ryan@ramen.is', name: 'Ryan Angilly', id: 'person-1234')
       end
 
       context "that does not respond to name" do
         before :each do
-          @dummy.current_user = {email: 'ryan@ramen.is', id: 'person-1234'}
+          @dummy.current_user = Dummy::User.with(email: 'ryan@ramen.is', id: 'person-1234')
         end
 
-        it "should render a comment erro" do
+        it "should render a comment error" do
           RamenRails::RamenAfterFilter.filter(@dummy)
           expect(@dummy.response.body).to include("See logs")
         end
@@ -71,7 +102,7 @@ describe 'After filter' do
 
       context "with a value proc set" do
         before :each do |c|
-          @dummy.current_user.value = 1000
+          @dummy.current_user.set value: 1000
           RamenRails.config do |c|
             c.current_user_value = Proc.new { current_user.value }
           end
@@ -101,7 +132,7 @@ describe 'After filter' do
 
       context "that responds to traits" do
         before :each do
-          @dummy.current_user.traits = {bucket: 6, is_friend: true, original_name: "Netflix"}
+          @dummy.current_user.set(traits: {bucket: 6, is_friend: true, original_name: "Netflix"})
         end
 
         it "should attach traits to company" do
@@ -110,11 +141,32 @@ describe 'After filter' do
         end
       end
 
+      context "that responds to #persisted? with false" do
+        before :each do
+          @dummy.current_user.set persisted?: false
+        end
+
+        it "should not render anything" do
+          filter = RamenRails::RamenAfterFilter.filter(@dummy)
+          expect(@dummy.response.body).to_not include("ramenSettings")
+        end
+      end
+
+      context "that responds to #persisted? with true" do
+        before :each do
+          @dummy.current_user.set persisted?: true
+        end
+
+        it "should render the tag" do
+          filter = RamenRails::RamenAfterFilter.filter(@dummy)
+          expect(@dummy.response.body).to include("ramenSettings")
+        end
+      end
 
       context "that responds to created_at" do
         before :each do
           @time = Time.new(2014, 11, 10) 
-          @dummy.current_user.created_at = @time 
+          @dummy.current_user.set created_at: @time 
         end
 
         it "should include created_at in output" do

@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec", "~>3.2"
   s.add_development_dependency "hashie", "~>3.4"
   s.add_development_dependency "timecop", "~>0.7"
+  s.add_development_dependency "byebug"
 
   s.add_dependency "activesupport", ">= 3.0"
 
