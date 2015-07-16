@@ -26,3 +26,6 @@ Support sending custom `trait` data into Ramen for Users & Companies.
 Version 0.6.1
 Check to see if `current_user` responds to `#persisted?` and, if so, and if it returns `false`,
 don't render `ramenSettings`
+
+Version 0.6.2
+Add more information to the 'exception in script tag' comment code

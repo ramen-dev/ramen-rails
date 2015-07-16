@@ -240,12 +240,13 @@ module RamenRails
 
       super(obj, organization_secret: ramen_org_secret)
 
-    rescue InvalidUserObject => e
-      ::Rails.logger.debug "InvalidUserObject exception. Not rendering Ramen script tag. Error details: #{e.inspect}"
-      "<!-- Exception in ramen script tag. See logs. -->"
     rescue => e
-      ::Rails.logger.debug "Exception in ramen-rails script tag method. Not rendering Ramen script tag. Error details: #{e.inspect}"
-      "<!-- Exception in ramen script tag. See logs. -->"
+      ::Rails.logger.fatal "Exception in ramen-rails script tag method. Not rendering Ramen script tag. #{e.class.to_s}: #{e.inspect}"
+      "<!-- Exception in ramen script tag. #{h e.class.to_s}: #{h e.to_s}. See your Rails logs. -->"
+    end
+
+    def h str
+      str.gsub("<", "&lt;").gsub(">", "&gt;")
     end
 
   end

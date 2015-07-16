@@ -49,6 +49,8 @@ describe 'After filter' do
       class LogProxy
         def debug(msg)
         end
+
+        alias fatal debug
       end
 
       def self.env
@@ -96,7 +98,7 @@ describe 'After filter' do
 
         it "should render a comment error" do
           RamenRails::RamenAfterFilter.filter(@dummy)
-          expect(@dummy.response.body).to include("See logs")
+          expect(@dummy.response.body).to include("See your Rails logs")
         end
       end
 
