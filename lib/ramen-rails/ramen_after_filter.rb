@@ -226,7 +226,7 @@ module RamenRails
         obj[:company] = {}
 
         [:url, :name, :id].each do |attr|
-          obj[:company][attr] = company.send(attr)
+          obj[:company][attr] = company.send(attr) if company.respond_to?(attr)
         end
     
         if company.respond_to?(:traits) && company.send(:traits).present?

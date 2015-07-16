@@ -29,3 +29,8 @@ don't render `ramenSettings`
 
 Version 0.6.2
 Add more information to the 'exception in script tag' comment code
+
+Version 0.6.3
+Since we fallback on `current_company` if it is not provided, we shouldn't throw an exception if that
+object doesn't conform to the interface we're expecting. Try to get name, url, and id, but don't force
+it.
