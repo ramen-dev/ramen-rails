@@ -206,7 +206,7 @@ module RamenRails
       raise InvalidUserObject.new("User #{user} does not respond to and have a present? #email") unless user.respond_to?(:email) && user.email.present?
 
       [:email, :name, :id].each do |attr|
-        obj[:user][attr] = user.send(attr)
+        obj[:user][attr] = user.send(attr).to_s
       end
      
       if user.respond_to?(:created_at) && user.send(:created_at).present?
@@ -226,7 +226,7 @@ module RamenRails
         obj[:company] = {}
 
         [:url, :name, :id].each do |attr|
-          obj[:company][attr] = company.send(attr) if company.respond_to?(attr)
+          obj[:company][attr] = company.send(attr).to_s if company.respond_to?(attr)
         end
     
         if company.respond_to?(:traits) && company.send(:traits).present?

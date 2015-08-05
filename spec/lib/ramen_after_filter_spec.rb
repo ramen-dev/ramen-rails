@@ -102,6 +102,17 @@ describe 'After filter' do
         end
       end
 
+      context "with an object id" do
+        before :each do
+          @dummy.current_user = Dummy::User.with(email: 'ryan@ramen.is', name: 'Ryan Angilly', id: {'$oid' => 'person-1234'})
+        end
+
+        it "should to_s the ID" do
+          filter = RamenRails::RamenAfterFilter.filter(@dummy)
+          expect(@dummy.response.body).to include(%q|id":"{\"$oid\"|)
+        end
+      end
+
       context "with a value proc set" do
         before :each do |c|
           @dummy.current_user.set value: 1000

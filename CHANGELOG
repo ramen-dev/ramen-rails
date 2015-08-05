@@ -34,3 +34,7 @@ Version 0.6.3
 Since we fallback on `current_company` if it is not provided, we shouldn't throw an exception if that
 object doesn't conform to the interface we're expecting. Try to get name, url, and id, but don't force
 it.
+
+Version 0.6.4
+Run #to_s on name, email, id (Customer) and url, name, id (Company) to deal with (among other things)
+how MongoDB BSON::ObjectIds are serialized
