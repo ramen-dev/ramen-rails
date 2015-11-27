@@ -125,6 +125,18 @@ describe 'After filter' do
           expect(@dummy.response.body).to_not include("ramenSettings")
           expect(@dummy.response.body).to include("Ramen not enabled for environment")
         end
+      
+        context "with a non-HTML content type" do
+          before :each do
+            @dummy.response.content_type = "application/json"
+          end
+
+          it "not render script tag or comment" do
+            filter = RamenRails::RamenAfterFilter.filter(@dummy)
+            expect(@dummy.response.body).to_not include("ramenSettings")
+            expect(@dummy.response.body).to_not include("Ramen not enabled for environment")
+          end
+        end
       end
 
       context "with a value proc set" do

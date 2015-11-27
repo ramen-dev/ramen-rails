@@ -22,7 +22,7 @@ module RamenRails
       
       if auto_include_filter.include_javascript?
         auto_include_filter.include_javascript!
-      elsif auto_include_filter.disabled_environment?
+      elsif auto_include_filter.include_disabled_comment?
         auto_include_filter.include_disabled_comment!
       end
     end
@@ -55,13 +55,19 @@ module RamenRails
       !enabled_environment?
     end
 
-    def include_javascript?
-      !ramen_script_tag_called_manually? &&
+    def include_disabled_comment?
+      disabled_environment? &&
         html_content_type? &&
-        response_has_closing_body_tag? &&
-        enabled_environment? &&
+        response_has_closing_body_tag?
+    end
+
+    def include_javascript?
+      enabled_environment? &&
+        ramen_user_object.present? &&
         ramen_org_id.present? &&
-        ramen_user_object.present?
+        html_content_type? &&
+        !ramen_script_tag_called_manually? &&
+        response_has_closing_body_tag?
     end
 
     private
@@ -74,7 +80,7 @@ module RamenRails
     end
 
     def response_has_closing_body_tag?
-      !!(response.body[CLOSING_BODY_TAG])
+      @_rhcbt ||= !!(response.body[CLOSING_BODY_TAG])
     end
 
     def logged_in_url
