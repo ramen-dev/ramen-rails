@@ -19,9 +19,12 @@ module RamenRails
 
     def self.filter(controller)
       auto_include_filter = new(controller)
-      return unless auto_include_filter.include_javascript?
-
-      auto_include_filter.include_javascript!
+      
+      if auto_include_filter.include_javascript?
+        auto_include_filter.include_javascript!
+      elsif auto_include_filter.disabled_environment?
+        auto_include_filter.include_disabled_comment!
+      end
     end
 
     attr_reader :controller
@@ -34,14 +37,29 @@ module RamenRails
       controller.ramen_script_tag_options
     end
 
+    def include_disabled_comment! 
+      response.body = response.body.gsub(CLOSING_BODY_TAG, "<!-- Ramen not enabled for environment `#{Rails.env}`. Enabled for: #{RamenRails.config.enabled_environments.inspect} -->" + '\\0')
+    end
+
     def include_javascript! 
       response.body = response.body.gsub(CLOSING_BODY_TAG, ramen_script_tag + '\\0')
+    end
+
+    def enabled_environment?
+      return true unless RamenRails.config.enabled_environments
+    
+      return RamenRails.config.enabled_environments.map(&:to_s).include?(Rails.env.to_s)
+    end
+
+    def disabled_environment?
+      !enabled_environment?
     end
 
     def include_javascript?
       !ramen_script_tag_called_manually? &&
         html_content_type? &&
         response_has_closing_body_tag? &&
+        enabled_environment? &&
         ramen_org_id.present? &&
         ramen_user_object.present?
     end

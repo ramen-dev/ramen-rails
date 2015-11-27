@@ -10,7 +10,8 @@ module RamenRails
         :return_url,
         :return_label,
         :ramen_js_asset_uri,
-        :custom_links
+        :custom_links,
+        :enabled_environments
     
       def ensure_not_lambda!(v)
         if v.lambda?

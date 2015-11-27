@@ -113,6 +113,20 @@ describe 'After filter' do
         end
       end
 
+      context "with enabled_environments set to empty" do
+        before :each do |c|
+          RamenRails.config do |c|
+            c.enabled_environments = []
+          end
+        end
+
+        it "not render script tag" do
+          filter = RamenRails::RamenAfterFilter.filter(@dummy)
+          expect(@dummy.response.body).to_not include("ramenSettings")
+          expect(@dummy.response.body).to include("Ramen not enabled for environment")
+        end
+      end
+
       context "with a value proc set" do
         before :each do |c|
           @dummy.current_user.set value: 1000
