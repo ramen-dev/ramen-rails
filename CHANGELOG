@@ -45,3 +45,9 @@ on selected environments.
 
 Version 0.7.1
 Because we yanked 0.7.0 to update this Changelog :)
+
+Version 0.7.2
+When an environment is disabled, we render a comment into the HTML saying "Ramen disabled
+in this environment". This bug fix makes that only happenf for `text/html` content types.
+
+We also made some performance improvements. 
