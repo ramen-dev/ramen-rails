@@ -38,3 +38,8 @@ it.
 Version 0.6.4
 Run #to_s on name, email, id (Customer) and url, name, id (Company) to deal with (among other things)
 how MongoDB BSON::ObjectIds are serialized
+
+Version 0.7.0
+Added ability to set `config.enabled_environments` so that the after_filter will only be ran
+on selected environments.
+
