@@ -43,3 +43,5 @@ Version 0.7.0
 Added ability to set `config.enabled_environments` so that the after_filter will only be ran
 on selected environments.
 
+Version 0.7.1
+Because we yanked 0.7.0 to update this Changelog :)
